@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Yingzhe Xu — Resume</title>
+
+  <!-- Fonts: Inter (geometric sans-serif) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- Prevent FOUC: apply dark mode class immediately -->
+  <script>
+    (function () {
+      var stored = localStorage.getItem('theme');
+      if (stored === 'dark' || (!stored && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+      }
+    })();
+  </script>
+
+  <!-- Tailwind CSS via CDN -->
+  <script>
+    tailwind = window.tailwind || {};
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            carbon:  '#171A20',
+            'electric-blue': '#3E6AE1',
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+          },
+        },
+      },
+    };
+  </script>
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- ==================== CUSTOM STYLES (Interactive) ==================== -->
+  <style>
+    /* ---------- Scroll Reveal ---------- */
+    .reveal-section {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+                  transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .reveal-section.revealed {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ---------- Progress Bar ---------- */
+    #progress-fill {
+      transform-origin: left center;
+      transition: transform 0.15s linear;
+    }
+
+    /* ---------- Back to Top ---------- */
+    #back-to-top {
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(12px);
+      transition: opacity 0.35s ease, visibility 0.35s ease, transform 0.35s ease;
+    }
+    #back-to-top.visible {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    /* ---------- Toast Notification ---------- */
+    #toast {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.35s ease, transform 0.35s ease;
+      pointer-events: none;
+    }
+    #toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ---------- Skill Tags ---------- */
+    .skill-tag {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.25rem 0.75rem;
+      font-size: 0.8125rem;
+      line-height: 1.5;
+      border-radius: 0.375rem;
+      background: #f3f4f6;
+      color: #4b5563;
+      cursor: default;
+      transition: all 0.2s ease;
+      user-select: none;
+    }
+    .dark .skill-tag {
+      background: #1f2937;
+      color: #d1d5db;
+    }
+    .skill-tag:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      background: #e5e7eb;
+    }
+    .dark .skill-tag:hover {
+      box-shadow: 0 2px 8px rgba(0,0,0,0.35);
+      background: #374151;
+    }
+
+    /* ---------- Experience Entry Hover ---------- */
+    .exp-entry {
+      position: relative;
+      border-left: 2px solid transparent;
+      padding-left: 1rem;
+      margin-left: -1rem;
+      border-radius: 0 0.375rem 0.375rem 0;
+      transition: background-color 0.25s ease, border-color 0.25s ease, padding-left 0.25s ease;
+    }
+    .exp-entry:hover {
+      background-color: rgba(0,0,0,0.018);
+      border-left-color: #d1d5db;
+    }
+    .dark .exp-entry:hover {
+      background-color: rgba(255,255,255,0.025);
+      border-left-color: #4b5563;
+    }
+
+    /* ---------- Contact Copy Cursor ---------- */
+    .contact-copy {
+      cursor: pointer;
+      transition: opacity 0.2s ease;
+      border-radius: 0.25rem;
+      padding: 0.125rem 0.25rem;
+      margin: -0.125rem -0.25rem;
+    }
+    .contact-copy:hover {
+      opacity: 0.75;
+      background-color: rgba(0,0,0,0.04);
+    }
+    .dark .contact-copy:hover {
+      background-color: rgba(255,255,255,0.06);
+    }
+
+    /* ---------- No-JS Fallback ---------- */
+    noscript .reveal-section {
+      opacity: 1 !important;
+      transform: none !important;
+    }
+  </style>
+  <noscript>
+    <style>
+      .reveal-section { opacity: 1 !important; transform: none !important; }
+      #back-to-top { display: none; }
+    </style>
+  </noscript>
+</head>
+
+<body class="bg-white dark:bg-carbon text-gray-800 dark:text-gray-200 font-sans antialiased leading-relaxed transition-colors duration-300">
+
+  <!-- ==================== READING PROGRESS BAR ==================== -->
+  <div id="progress-container" class="fixed top-0 left-0 w-full h-[2.5px] z-40 pointer-events-none bg-transparent">
+    <div id="progress-fill" class="h-full bg-gray-300 dark:bg-gray-600 w-full" style="transform: scaleX(0);"></div>
+  </div>
+
+  <!-- ==================== DARK MODE TOGGLE ==================== -->
+  <button
+    id="theme-toggle"
+    aria-label="Toggle dark mode"
+    class="fixed top-5 right-5 z-50 w-9 h-9 flex items-center justify-center rounded-full
+           bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300
+           hover:bg-gray-200 dark:hover:bg-gray-700
+           transition-colors duration-200 cursor-pointer
+           border-0 outline-none focus:ring-2 focus:ring-gray-400 dark:focus:ring-gray-500"
+  >
+    <i id="theme-icon" class="fa-solid fa-moon text-sm"></i>
+  </button>
+
+  <!-- ==================== TOAST NOTIFICATION ==================== -->
+  <div id="toast"
+       class="fixed bottom-8 left-1/2 z-50 flex items-center gap-2 px-4 py-2.5
+              bg-gray-800 dark:bg-gray-200 text-white dark:text-gray-800
+              text-sm font-medium rounded-md shadow-lg"
+       style="transform: translate(-50%, 20px);">
+    <i class="fa-solid fa-check text-xs"></i>
+    <span id="toast-msg">Copied</span>
+  </div>
+
+  <!-- ==================== BACK TO TOP ==================== -->
+  <button
+    id="back-to-top"
+    aria-label="Back to top"
+    class="fixed bottom-6 right-6 z-50 w-10 h-10 flex items-center justify-center rounded-full
+           bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400
+           shadow-[0_2px_12px_rgba(0,0,0,0.08)] dark:shadow-[0_2px_12px_rgba(0,0,0,0.4)]
+           hover:shadow-[0_4px_16px_rgba(0,0,0,0.12)] dark:hover:shadow-[0_4px_16px_rgba(0,0,0,0.5)]
+           hover:text-gray-700 dark:hover:text-gray-200
+           border-0 outline-none focus:ring-2 focus:ring-gray-400 dark:focus:ring-gray-500
+           transition-all duration-200 cursor-pointer"
+  >
+    <i class="fa-solid fa-arrow-up text-sm"></i>
+  </button>
+
+  <!-- ==================== MAIN CONTENT ==================== -->
+  <main class="max-w-3xl mx-auto px-5 sm:px-8 py-14 sm:py-20">
+
+    <!-- ==================== HEADER ==================== -->
+    <header class="flex flex-col-reverse md:flex-row md:items-start md:justify-between gap-8 mb-16 sm:mb-20">
+      <!-- Left: Name, Contact, Actions -->
+      <div class="flex-1 text-center md:text-left">
+        <!-- Name -->
+        <h1 class="text-[40px] leading-tight font-medium tracking-tight text-gray-900 dark:text-white mb-4">
+          YINGZHE XU
+        </h1>
+
+        <!-- Contact Info (phone & email are clickable → copy) -->
+        <div class="flex flex-wrap justify-center md:justify-start gap-x-6 gap-y-2 text-sm text-gray-500 dark:text-gray-400 mb-7">
+          <span class="inline-flex items-center gap-2 whitespace-nowrap contact-copy"
+                data-copy="(+86) 189-5286-4109"
+                title="Click to copy phone number">
+            <i class="fa-solid fa-phone text-xs"></i>
+            (+86) 189-5286-4109
+          </span>
+          <span class="inline-flex items-center gap-2 whitespace-nowrap contact-copy"
+                data-copy="xuyingz99@163.com"
+                title="Click to copy email">
+            <i class="fa-solid fa-envelope text-xs"></i>
+            xuyingz99@163.com
+          </span>
+          <span class="inline-flex items-center gap-2 whitespace-nowrap">
+            <i class="fa-solid fa-location-dot text-xs"></i>
+            Shanghai (Open to Relocate)
+          </span>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex flex-wrap justify-center md:justify-start gap-3">
+          <!-- Primary: Download PDF (Electric Blue #3E6AE1 — exclusive accent) -->
+          <a
+            href="resume.pdf"
+            download
+            class="inline-flex items-center gap-2.5 px-7 py-3 text-base font-medium rounded-md
+                   text-white no-underline
+                   hover:brightness-110 active:brightness-95
+                   transition-all duration-200
+                   shadow-[0_2px_8px_rgba(62,106,225,0.25)] hover:shadow-[0_4px_16px_rgba(62,106,225,0.35)]"
+            style="background-color: #3E6AE1;"
+          >
+            <i class="fa-solid fa-download text-sm"></i>
+            Download PDF
+          </a>
+          <!-- Secondary: Contact Me -->
+          <a
+            href="mailto:xuyingz99@163.com"
+            class="inline-flex items-center gap-2 px-6 py-2.5 text-sm font-medium rounded-md
+                   bg-transparent text-gray-700 dark:text-gray-200
+                   border border-gray-300 dark:border-gray-600
+                   hover:border-gray-400 dark:hover:border-gray-500 hover:text-gray-900 dark:hover:text-white
+                   transition-all duration-200 no-underline"
+          >
+            Contact Me
+          </a>
+        </div>
+      </div>
+
+      <!-- Right: Avatar -->
+      <div class="flex-shrink-0 flex justify-center">
+        <div class="w-28 h-28 sm:w-32 sm:h-32 rounded-full overflow-hidden
+                    shadow-[0_4px_24px_rgba(0,0,0,0.06)] dark:shadow-[0_4px_24px_rgba(0,0,0,0.4)]
+                    bg-gray-100 dark:bg-gray-700
+                    transition-transform duration-500 ease-out hover:scale-105">
+          <img
+            src="profile.jpg"
+            alt="Yingzhe Xu"
+            class="w-full h-full object-cover"
+            onerror="this.style.display='none';this.parentElement.classList.add('flex','items-center','justify-center','text-gray-400','dark:text-gray-500','text-2xl','font-medium');this.parentElement.innerHTML='<span>YX</span>';"
+          >
+        </div>
+      </div>
+    </header>
+
+    <!-- ==================== PROFESSIONAL SUMMARY ==================== -->
+    <section class="reveal-section mb-14 sm:mb-18">
+      <h2 class="text-xs font-medium uppercase tracking-[0.2em] text-gray-400 dark:text-gray-500 mb-5">
+        Professional Summary
+      </h2>
+      <p class="text-[15px] leading-relaxed text-gray-600 dark:text-gray-300 max-w-none">
+        Legal and Risk Management professional (LL.M.) with expertise in corporate compliance and
+        risk control within state-owned enterprises. Highly skilled in automating data workflows
+        and reporting processes using Python and Streamlit. Adept at cross-functional collaboration,
+        contract management, and trade compliance execution. Fluent in English (CET-6) with strong
+        analytical problem-solving capabilities to drive operational optimization.
+      </p>
+    </section>
+
+    <!-- Faint separator -->
+    <hr class="border-0 h-px bg-gray-200 dark:bg-gray-800 mb-14 sm:mb-18">
+
+    <!-- ==================== WORK EXPERIENCE ==================== -->
+    <section class="reveal-section mb-14 sm:mb-18">
+      <h2 class="text-xs font-medium uppercase tracking-[0.2em] text-gray-400 dark:text-gray-500 mb-8">
+        Work Experience
+      </h2>
+
+      <!-- COFCO Trading -->
+      <div class="mb-10">
+        <div class="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1 mb-1">
+          <h3 class="text-base font-medium text-gray-900 dark:text-white">COFCO Trading</h3>
+          <span class="text-xs font-medium text-gray-400 dark:text-gray-500 whitespace-nowrap">State-Owned Enterprise</span>
+        </div>
+
+        <!-- Role 1 -->
+        <div class="exp-entry mt-6">
+          <div class="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-0.5 mb-3">
+            <h4 class="text-[15px] font-medium text-gray-800 dark:text-gray-200">
+              Risk Management Specialist, Coastal Region
+            </h4>
+            <span class="text-xs text-gray-400 dark:text-gray-500 whitespace-nowrap">2026.04 – 2026.07</span>
+          </div>
+          <ul class="space-y-1.5 text-[14px] text-gray-600 dark:text-gray-400 list-disc list-outside ml-4">
+            <li>Enforce internal controls, risk warnings, compliance reviews, and the "Ten Red Lines" policy.</li>
+            <li>Partner with headquarters on cross-departmental investigations to uncover risks and drive closed-loop rectification.</li>
+            <li>Deliver risk control training on automated workflows and compliance cases to staff and management.</li>
+            <li>Propose system and process optimizations to headquarters based on cross-level operational feedback.</li>
+          </ul>
+        </div>
+
+        <!-- Role 2 -->
+        <div class="exp-entry mt-6">
+          <div class="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-0.5 mb-3">
+            <h4 class="text-[15px] font-medium text-gray-800 dark:text-gray-200">
+              Market Risk Management Specialist <span class="font-normal text-gray-500 dark:text-gray-400">(Seconded to Headquarters)</span>
+            </h4>
+            <span class="text-xs text-gray-400 dark:text-gray-500 whitespace-nowrap">2025.07 – 2026.03</span>
+          </div>
+          <ul class="space-y-1.5 text-[14px] text-gray-600 dark:text-gray-400 list-disc list-outside ml-4">
+            <li>Monitor market risks, exposure P&L, and industry trends; manage performance margins and overdue sales.</li>
+            <li>Participate in trade compliance inspections for core departments and assist in revising procurement and risk management policies.</li>
+            <li>System Automation & Data Processing: Developed and deployed 8+ automated Python scripts (pandas, openpyxl) and Streamlit/GitHub web applications (e.g., ctmr2026 project) for automated data cleaning, reporting, and email alerts, significantly boosting efficiency.</li>
+          </ul>
+        </div>
+
+        <!-- Role 3 -->
+        <div class="exp-entry mt-6">
+          <div class="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-0.5 mb-3">
+            <h4 class="text-[15px] font-medium text-gray-800 dark:text-gray-200">
+              Risk Management Specialist, Coastal Region
+            </h4>
+            <span class="text-xs text-gray-400 dark:text-gray-500 whitespace-nowrap">2024.12 – 2025.06</span>
+          </div>
+          <ul class="space-y-1.5 text-[14px] text-gray-600 dark:text-gray-400 list-disc list-outside ml-4">
+            <li>Manage cargo rights risks, executing credit admission, dynamic rating, and qualification tracking for leased warehouses.</li>
+            <li>Track overdue contract margins and calculate supervision deduction fees.</li>
+            <li>Rotated to Guangxi and Fujian branches to analyze frontline operational logic and upgrade frontline risk control systems.</li>
+          </ul>
+        </div>
+
+        <!-- Role 4 -->
+        <div class="exp-entry mt-6">
+          <div class="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-0.5 mb-3">
+            <h4 class="text-[15px] font-medium text-gray-800 dark:text-gray-200">
+              Legal Counsel, General Department
+            </h4>
+            <span class="text-xs text-gray-400 dark:text-gray-500 whitespace-nowrap">2024.07 – 2024.12</span>
+          </div>
+          <ul class="space-y-1.5 text-[14px] text-gray-600 dark:text-gray-400 list-disc list-outside ml-4">
+            <li>Conduct research on civil/commercial laws and draft legal documents including collection letters and risk warnings.</li>
+            <li>Manage compliance documentation and contract reviews to ensure smooth operation of the new contract system.</li>
+            <li>Execute quarterly special inspections on contract risk performance.</li>
+            <li>Collaborate cross-departmentally on daily disciplinary inspections to advance corporate legal compliance and standardization.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Faint separator -->
+    <hr class="border-0 h-px bg-gray-200 dark:bg-gray-800 mb-14 sm:mb-18">
+
+    <!-- ==================== INTERNSHIP EXPERIENCE ==================== -->
+    <section class="reveal-section mb-14 sm:mb-18">
+      <h2 class="text-xs font-medium uppercase tracking-[0.2em] text-gray-400 dark:text-gray-500 mb-8">
+        Internship Experience
+      </h2>
+
+      <!-- ZhongAn Insurance -->
+      <div class="exp-entry mb-8">
+        <div class="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1 mb-1">
+          <h3 class="text-base font-medium text-gray-900 dark:text-white">ZhongAn Insurance</h3>
+        </div>
+        <div class="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-0.5 mb-3">
+          <h4 class="text-[15px] font-medium text-gray-800 dark:text-gray-200">
+            Legal & Compliance Intern
+          </h4>
+          <span class="text-xs text-gray-400 dark:text-gray-500 whitespace-nowrap">2023.02 – 2023.05</span>
+        </div>
+        <ul class="space-y-1.5 text-[14px] text-gray-600 dark:text-gray-400 list-disc list-outside ml-4">
+          <li>Conduct factual search and regulatory research to provide work support for the compliance team.</li>
+          <li>Assist in contract management and compliance review of marketing activities, and participate in formulating Standard Operating Procedures (SOPs).</li>
+        </ul>
+      </div>
+
+      <!-- Zhenjiang Court & Law Firms -->
+      <div class="exp-entry">
+        <div class="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1 mb-1">
+          <h3 class="text-base font-medium text-gray-900 dark:text-white">Zhenjiang Jingkou District People's Court & Various Law Firms</h3>
+        </div>
+        <div class="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-0.5 mb-3">
+          <h4 class="text-[15px] font-medium text-gray-800 dark:text-gray-200">
+            Legal Intern
+          </h4>
+          <span class="text-xs text-gray-400 dark:text-gray-500 whitespace-nowrap">2019.07 – 2022.08</span>
+        </div>
+        <ul class="space-y-1.5 text-[14px] text-gray-600 dark:text-gray-400 list-disc list-outside ml-4">
+          <li>Assist in data collection and drafting of legal documents, ensuring standardized archiving and accurate recording of case files to meet internal audit requirements.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Faint separator -->
+    <hr class="border-0 h-px bg-gray-200 dark:bg-gray-800 mb-14 sm:mb-18">
+
+    <!-- ==================== EDUCATION ==================== -->
+    <section class="reveal-section mb-14 sm:mb-18">
+      <h2 class="text-xs font-medium uppercase tracking-[0.2em] text-gray-400 dark:text-gray-500 mb-8">
+        Education
+      </h2>
+
+      <!-- Master -->
+      <div class="exp-entry mb-7">
+        <div class="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-0.5 mb-1">
+          <h3 class="text-[15px] font-medium text-gray-900 dark:text-white">
+            Nanjing University of Finance and Economics
+          </h3>
+          <span class="text-xs text-gray-400 dark:text-gray-500 whitespace-nowrap">2021.09 – 2024.06</span>
+        </div>
+        <p class="text-[14px] text-gray-600 dark:text-gray-400 mb-1.5">
+          Master of Law (Economic Law)
+        </p>
+        <p class="text-[13px] text-gray-500 dark:text-gray-500">
+          Honors: Second-Prize and Third-Prize Academic Scholarships for Graduate Students.
+        </p>
+      </div>
+
+      <!-- Bachelor -->
+      <div class="exp-entry">
+        <div class="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-0.5 mb-1">
+          <h3 class="text-[15px] font-medium text-gray-900 dark:text-white">
+            Nanjing University of Finance and Economics Hongshan College
+          </h3>
+          <span class="text-xs text-gray-400 dark:text-gray-500 whitespace-nowrap">2017.09 – 2021.06</span>
+        </div>
+        <p class="text-[14px] text-gray-600 dark:text-gray-400 mb-1.5">
+          Bachelor of Law
+        </p>
+        <p class="text-[13px] text-gray-500 dark:text-gray-500">
+          Honors: Scholarship for Further Studies, Academic Excellence Scholarship, Jiangsu Provincial College Student Innovation and Entrepreneurship Competition Award.
+        </p>
+      </div>
+    </section>
+
+    <!-- Faint separator -->
+    <hr class="border-0 h-px bg-gray-200 dark:bg-gray-800 mb-14 sm:mb-18">
+
+    <!-- ==================== SKILLS & CERTIFICATIONS ==================== -->
+    <section class="reveal-section">
+      <h2 class="text-xs font-medium uppercase tracking-[0.2em] text-gray-400 dark:text-gray-500 mb-8">
+        Skills & Certifications
+      </h2>
+
+      <div class="space-y-5 text-[14px]">
+        <!-- Languages -->
+        <div class="flex flex-col sm:flex-row gap-2 sm:gap-0">
+          <span class="font-medium text-gray-800 dark:text-gray-200 w-36 sm:flex-shrink-0 pt-0.5">Languages</span>
+          <span class="text-gray-600 dark:text-gray-400">English (CET-6, proficient in reading, writing, and speaking), Mandarin (Native).</span>
+        </div>
+
+        <!-- Certifications → Tags -->
+        <div class="flex flex-col sm:flex-row gap-2 sm:gap-0">
+          <span class="font-medium text-gray-800 dark:text-gray-200 w-36 sm:flex-shrink-0 pt-0.5">Certifications</span>
+          <div class="flex flex-wrap gap-2">
+            <span class="skill-tag">Legal Professional Qualification Certificate (Class A)</span>
+            <span class="skill-tag">Futures Practitioner Qualification Certificate</span>
+            <span class="skill-tag">Securities Practitioner Qualification Certificate</span>
+          </div>
+        </div>
+
+        <!-- Technical Skills → Tags -->
+        <div class="flex flex-col sm:flex-row gap-2 sm:gap-0">
+          <span class="font-medium text-gray-800 dark:text-gray-200 w-36 sm:flex-shrink-0 pt-0.5">Technical Skills</span>
+          <div class="flex flex-wrap gap-2">
+            <span class="skill-tag">Python</span>
+            <span class="skill-tag">pandas</span>
+            <span class="skill-tag">openpyxl</span>
+            <span class="skill-tag">Streamlit</span>
+            <span class="skill-tag">GitHub</span>
+            <span class="skill-tag">AI-assisted Programming</span>
+            <span class="skill-tag">PPT</span>
+            <span class="skill-tag">Word</span>
+            <span class="skill-tag">Excel</span>
+          </div>
+        </div>
+
+        <!-- Proficiencies -->
+        <div class="flex flex-col sm:flex-row gap-2 sm:gap-0">
+          <span class="font-medium text-gray-800 dark:text-gray-200 w-36 sm:flex-shrink-0 pt-0.5">Proficiencies</span>
+          <span class="text-gray-600 dark:text-gray-400">Data report creation, factual search, and office automation tool development.</span>
+        </div>
+
+        <!-- Personal Webpage -->
+        <div class="flex flex-col sm:flex-row gap-2 sm:gap-0">
+          <span class="font-medium text-gray-800 dark:text-gray-200 w-36 sm:flex-shrink-0 pt-0.5">Personal Webpage</span>
+          <span>
+            <a
+              href="https://ctmr2026.streamlit.app/"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="text-gray-600 dark:text-gray-400 underline underline-offset-2
+                     hover:text-gray-900 dark:hover:text-gray-200 transition-colors"
+            >https://ctmr2026.streamlit.app/</a>
+          </span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer spacing -->
+    <div class="mt-20"></div>
+
+  </main>
+
+  <!-- ==================== SCRIPTS ==================== -->
+  <script>
+  (function () {
+    var html = document.documentElement;
+
+    /* ================================================================
+       1. DARK MODE TOGGLE
+       ================================================================ */
+    var toggle  = document.getElementById('theme-toggle');
+    var icon    = document.getElementById('theme-icon');
+
+    function setIcon() {
+      var isDark = html.classList.contains('dark');
+      icon.className = isDark
+        ? 'fa-solid fa-sun text-sm'
+        : 'fa-solid fa-moon text-sm';
+    }
+    setIcon();
+
+    toggle.addEventListener('click', function () {
+      html.classList.toggle('dark');
+      var isDark = html.classList.contains('dark');
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+      setIcon();
+    });
+
+    /* ================================================================
+       2. SCROLL REVEAL (Intersection Observer)
+       ================================================================ */
+    var revealSections = document.querySelectorAll('.reveal-section');
+    if (revealSections.length && 'IntersectionObserver' in window) {
+      var observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('revealed');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, {
+        threshold: 0.12,
+        rootMargin: '0px 0px -30px 0px'
+      });
+
+      revealSections.forEach(function (el) { observer.observe(el); });
+
+      // Safety fallback: if any sections are still hidden after 2s, reveal them all
+      setTimeout(function () {
+        revealSections.forEach(function (el) {
+          if (!el.classList.contains('revealed')) {
+            el.classList.add('revealed');
+          }
+        });
+      }, 2000);
+    } else {
+      // Fallback for browsers without IntersectionObserver
+      revealSections.forEach(function (el) { el.classList.add('revealed'); });
+    }
+
+    /* ================================================================
+       3. READING PROGRESS BAR
+       ================================================================ */
+    var progressFill = document.getElementById('progress-fill');
+
+    function updateProgress() {
+      var scrollTop  = window.scrollY || document.documentElement.scrollTop;
+      var docHeight  = document.documentElement.scrollHeight - window.innerHeight;
+      var progress   = docHeight > 0 ? Math.min(scrollTop / docHeight, 1) : 0;
+      progressFill.style.transform = 'scaleX(' + progress + ')';
+    }
+
+    window.addEventListener('scroll', updateProgress, { passive: true });
+    updateProgress();
+
+    /* ================================================================
+       4. BACK TO TOP BUTTON
+       ================================================================ */
+    var backToTop = document.getElementById('back-to-top');
+
+    function updateBackToTop() {
+      var scrollY = window.scrollY || document.documentElement.scrollTop;
+      if (scrollY > 500) {
+        backToTop.classList.add('visible');
+      } else {
+        backToTop.classList.remove('visible');
+      }
+    }
+
+    window.addEventListener('scroll', updateBackToTop, { passive: true });
+    updateBackToTop();
+
+    backToTop.addEventListener('click', function () {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    /* ================================================================
+       5. COPY TO CLIPBOARD + TOAST
+       ================================================================ */
+    var toast      = document.getElementById('toast');
+    var toastMsg   = document.getElementById('toast-msg');
+    var toastTimer = null;
+
+    function showToast(message) {
+      toastMsg.textContent = message;
+      toast.classList.add('show');
+      if (toastTimer) clearTimeout(toastTimer);
+      toastTimer = setTimeout(function () {
+        toast.classList.remove('show');
+      }, 2200);
+    }
+
+    var contactItems = document.querySelectorAll('.contact-copy');
+    contactItems.forEach(function (el) {
+      el.addEventListener('click', function () {
+        var text = el.getAttribute('data-copy') || '';
+        if (!text) return;
+
+        // Use modern clipboard API with fallback
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(function () {
+            showToast('Copied to clipboard');
+          }).catch(function () {
+            fallbackCopy(text);
+          });
+        } else {
+          fallbackCopy(text);
+        }
+      });
+    });
+
+    function fallbackCopy(text) {
+      var ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.left = '-9999px';
+      ta.style.top = '-9999px';
+      document.body.appendChild(ta);
+      ta.focus();
+      ta.select();
+      try {
+        var ok = document.execCommand('copy');
+        if (ok) { showToast('Copied to clipboard'); }
+      } catch (e) { /* silent */ }
+      document.body.removeChild(ta);
+    }
+  })();
+  </script>
+
+</body>
+</html>
